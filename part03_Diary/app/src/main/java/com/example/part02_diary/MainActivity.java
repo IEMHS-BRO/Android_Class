@@ -1,7 +1,9 @@
 package com.example.part02_diary;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -45,7 +47,14 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 } else {
                     // 비밀번호 틀림
-                    Toast.makeText(MainActivity.this, "비밀번호가 틀렸습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    AlertDialog dialog = builder.setTitle("비밀번호가 일치하지 않습니다.").setMessage("확인 후 다시 시도해 주세요.").setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    }).create();
+                    dialog.show();
                 }
             }
         });
