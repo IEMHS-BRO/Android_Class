@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import java.util.ArrayList;
 
 public class ToDoListAdapter extends BaseAdapter {
@@ -20,6 +22,17 @@ public class ToDoListAdapter extends BaseAdapter {
 
     public void addItem(String item) {
         toDoList.add(item);
+        notifyDataSetChanged();
+    }
+
+    public void removeItem(int index) {
+        toDoList.remove(index);
+        notifyDataSetChanged();
+    }
+
+    public void editItem(int index, String item) {
+        toDoList.remove(index);
+        toDoList.add(index, item);
         notifyDataSetChanged();
     }
 
