@@ -46,10 +46,13 @@
             <!-- TODO : 회원가입 > 입력 필드 디자인 완성 -->
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:id="@+id/layout_input_id"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:hint="아이디"
+                app:endIconMode="clear_text"
                 app:layout_constraintTop_toBottomOf="@id/tv_title_account"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
@@ -62,32 +65,40 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:id="@+id/layout_input_pw"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:hint="비밀번호"
+                app:endIconMode="password_toggle"
                 app:layout_constraintTop_toBottomOf="@id/layout_input_id"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/input_pw"
+                    android:inputType="textPassword"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:id="@+id/layout_input_pw_again"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                app:endIconMode="password_toggle"
+                android:hint="비밀번호 확인"
                 app:layout_constraintTop_toBottomOf="@id/layout_input_pw"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/input_pw_again"
+                    android:inputType="textPassword"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
@@ -105,10 +116,13 @@
                 app:layout_constraintStart_toStartOf="parent"/>
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:id="@+id/layout_input_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                app:endIconMode="clear_text"
+                android:hint="이름"
                 app:layout_constraintTop_toBottomOf="@id/tv_title_my_info"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
@@ -121,10 +135,13 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:id="@+id/layout_input_number"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                app:endIconMode="clear_text"
+                android:hint="전화번호"
                 app:layout_constraintTop_toBottomOf="@id/layout_input_name"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
