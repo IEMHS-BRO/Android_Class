@@ -4,9 +4,9 @@
     <color name="pink">#FF8D90</color>
     <color name="green">#C0E375</color>
     <color name="yellow">#FFE5A1</color>
-    <color name="dark_gray">#626263</color>
-    <color name="gray">#848486</color>
-    <color name="light_gray">#E5E5E5</color>
+    <color name="subtitle">#626263</color>
+    <color name="description">#848486</color>
+    <color name="placeholder">#E5E5E5</color>
     <color name="black">#333333</color>
     <color name="white">#FFFFFFFF</color>
 </resources>

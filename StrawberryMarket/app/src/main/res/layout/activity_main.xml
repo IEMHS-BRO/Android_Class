@@ -11,6 +11,7 @@
         android:id="@+id/tool_bar"
         tools:title="Hello, 김다훈!"
         app:menu="@menu/menu_main"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
@@ -18,6 +19,7 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <ListView
+        tools:listitem="@layout/item_product"
         android:id="@+id/list_product"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -29,6 +31,7 @@
     <!-- TODO : 메인 > 플로팅 액션 버튼 디자인 완성 -->
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/btn_go_to_post_product"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="26dp"
