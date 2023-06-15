@@ -1,25 +1,18 @@
 package com.iehms.strawberrymarket;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.iehms.strawberrymarket.adapter.ProductListAdapter;
 import com.iehms.strawberrymarket.model.HttpResult;
-import com.iehms.strawberrymarket.model.Product;
-import com.iehms.strawberrymarket.model.UserInfo;
 import com.iehms.strawberrymarket.util.AuthManager;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,83 +23,69 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class MainActivity extends AppCompatActivity {
+public class ProductDetailActivity extends AppCompatActivity {
 
-    ListView lvProduct;
-    ProductListAdapter adapter;
+    public static String KEY_PRODUCT_ID = "productId";
+    private int productId;
     Toolbar toolbar;
-    ExtendedFloatingActionButton floatingActionButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_product_detail);
 
-        lvProduct = findViewById(R.id.list_product);
+        productId = getIntent().getIntExtra(KEY_PRODUCT_ID, -1);
         toolbar = findViewById(R.id.tool_bar);
-        floatingActionButton = findViewById(R.id.btn_go_to_post_product);
 
-        adapter = new ProductListAdapter(this);
-
-        lvProduct.setAdapter(adapter);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToPostProduct();
-            }
-        });
-
-        lvProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Product product = (Product) adapter.getItem(position);
-                int productId = product.getId();
-                Intent intent = new Intent(MainActivity.this, ProductDetailActivity.class);
-                intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, productId);
-                startActivity(intent);
-            }
-        });
-
-        toolbar.inflateMenu(R.menu.menu_main);
+        // 툴바 메뉴 클릭 리스너 추가
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if(item.getItemId() == R.id.menu_profile) {
-                    goToProfile();
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                if(menuItem.getItemId() == R.id.menu_delete) {
+                    // 삭제 여부를 묻는 다이얼로그
+                    AlertDialog dialog = new AlertDialog.Builder(ProductDetailActivity.this)
+                            .setTitle("삭제 하시겠습니까?")
+                            .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    new ProductDeleteApiTask().execute();
+                                }
+                            })
+                            .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            })
+                            .create();
+
+                    dialog.show();
+
+
                 }
                 return false;
             }
         });
 
-
-        new ProductListApiTask().execute();
-        new UserInfoApiTask().execute();
+        new ProductDetailApiTask().execute();
     }
 
-    private void goToPostProduct() {
-        Intent intent = new Intent(this, PostProductActivity.class);
-        startActivity(intent);
-    }
-
-    private void goToProfile() {
-        Intent intent = new Intent(this, ProfileActivity.class);
-        startActivity(intent);
-    }
-
-    // API 통신 (리스트 조회 API 연동)
-    private class ProductListApiTask extends AsyncTask<String, String, HttpResult> {
-
+    /**
+     * 제품 정보 조회 API
+     */
+    private class ProductDetailApiTask extends AsyncTask<String, String, HttpResult> {
         @Override
         protected HttpResult doInBackground(String... params) {
             HttpsURLConnection conn;
 
             try {
-                // 로그인 API URL 생성
-                URL url = new URL(Constant.BASE_URL + "/products/");
+
+                // 제품 정보 획득 API URL 생성
+                URL url = new URL(Constant.BASE_URL + "/products/" + productId);
 
                 // URL 연결
                 conn = (HttpsURLConnection) url.openConnection();
@@ -123,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 // 헤더 타입 설정
                 conn.setRequestProperty("Content-Type", "application/json");
                 conn.setRequestProperty("Accept", "*/*");
-                conn.setRequestProperty("Authorization", "Bearer " + AuthManager.getToken(MainActivity.this));
+                conn.setRequestProperty("Authorization", "Bearer " + AuthManager.getToken(ProductDetailActivity.this));
 
                 // HTTP 요청 응답 수신
                 InputStream is;
@@ -154,10 +133,16 @@ public class MainActivity extends AppCompatActivity {
             try {
                 if(httpResult.getCode() == HttpsURLConnection.HTTP_OK) {
                     // 통신에 성공했을 경우 (200)
-                    // TODO : httpResult.getResult()인 String을 JSON으로 파싱 후 ArrayList<Product>로 만들어 Adapter에 전달하는 코드 작성
+                    JSONObject json = new JSONObject(httpResult.getResult());   // json으로 파싱
+                    JSONObject user = json.getJSONObject("user");         // 해당 게시물의 업로드 유저 정보 획득
+                    int userId = user.getInt("id");                       // 유저 id 획득
+                    if(userId == Global.getUserInfo().getId()) {                // 내 유저 id와 동일할 경우 (내 게시물일 경우)
+                        toolbar.inflateMenu(R.menu.menu_product_detail);        // 메뉴 추가 (삭제 버튼)
+                    }
+                    // TODO : httpResult.getResult()인 String을 JSON으로 파싱 후 화면에 보여주는 코드 작성
                 } else {
                     String msg = new JSONObject(httpResult.getResult()).getString("msg");
-                    Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG).show();
+                    Toast.makeText(ProductDetailActivity.this, msg, Toast.LENGTH_LONG).show();
                 }
             } catch (JSONException e) {
                 throw new RuntimeException(e);
@@ -165,15 +150,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // API 통신 (사용자 정보 조회)
-    private class UserInfoApiTask extends AsyncTask<String, String, HttpResult> {
+    /**
+     * 제품 삭제 API
+     */
+    private class ProductDeleteApiTask extends AsyncTask<String, String, HttpResult> {
         @Override
         protected HttpResult doInBackground(String... params) {
             HttpsURLConnection conn;
 
             try {
-                // 로그인 API URL 생성
-                URL url = new URL(Constant.BASE_URL + "/auth/user");
+
+                // 제품 정보 획득 API URL 생성
+                URL url = new URL(Constant.BASE_URL + "/products/" + productId);
 
                 // URL 연결
                 conn = (HttpsURLConnection) url.openConnection();
@@ -185,12 +173,12 @@ public class MainActivity extends AppCompatActivity {
                 conn.setReadTimeout(10 * 1000);
 
                 // 요청 방식 (POST)
-                conn.setRequestMethod("GET");
+                conn.setRequestMethod("DELETE");
 
                 // 헤더 타입 설정
                 conn.setRequestProperty("Content-Type", "application/json");
                 conn.setRequestProperty("Accept", "*/*");
-                conn.setRequestProperty("Authorization", "Bearer " + AuthManager.getToken(MainActivity.this));
+                conn.setRequestProperty("Authorization", "Bearer " + AuthManager.getToken(ProductDetailActivity.this));
 
                 // HTTP 요청 응답 수신
                 InputStream is;
@@ -220,15 +208,18 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(HttpResult httpResult) {
             try {
                 if(httpResult.getCode() == HttpsURLConnection.HTTP_OK) {
-                    JSONObject json = new JSONObject(httpResult.getResult());
-                    // TODO : 파싱된 json 데이터를 ToolBar Title에 세팅되도록 코드 작성 (Figma와 동일한 문구)
+                    // 통신에 성공했을 경우 (200)
+                    Toast.makeText(ProductDetailActivity.this, "삭제했습니다.", Toast.LENGTH_SHORT).show();
+                    finish();
                 } else {
                     String msg = new JSONObject(httpResult.getResult()).getString("msg");
-                    Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG).show();
+                    Toast.makeText(ProductDetailActivity.this, msg, Toast.LENGTH_LONG).show();
                 }
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
         }
     }
+
+
 }

@@ -46,6 +46,14 @@ public class Product {
         this.createdAt = createdAt;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     /**
      * 생성자
      * @param imageUrl  이미지 URL
@@ -53,13 +61,15 @@ public class Product {
      * @param price     상품의 가격
      * @param user      판매자 이름
      * @param createdAt 게시글 생성 일자 (yyyy-MM-dd HH:mm:ss)
+     * @param id        물건 ID (서버 unique id)
      */
-    public Product(String imageUrl, String title, int price, String user, String createdAt) {
+    public Product(String imageUrl, String title, int price, String user, String createdAt, int id) {
         this.imageUrl = imageUrl;
         this.title = title;
         this.price = price;
         this.user = user;
         this.createdAt = createdAt;
+        this.id = id;
     }
 
     String imageUrl;
@@ -67,4 +77,5 @@ public class Product {
     int price;
     String user;
     String createdAt;
+    int id;
 }

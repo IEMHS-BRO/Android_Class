@@ -14,6 +14,15 @@
         android:theme="@style/Theme.StrawberryMarket"
         tools:targetApi="31">
         <activity
+            android:name=".ProductDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MyProductListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".PostProductActivity"
             android:exported="false" />
         <activity

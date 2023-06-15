@@ -5,6 +5,7 @@
     <item android:icon="@drawable/ic_account_circle"
         android:title="프로필"
         app:showAsAction="always"
+        android:id="@+id/menu_profile"
         android:iconTint="@color/red"/>
 
 </menu>
