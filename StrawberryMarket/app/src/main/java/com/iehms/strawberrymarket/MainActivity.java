@@ -221,6 +221,15 @@ public class MainActivity extends AppCompatActivity {
             try {
                 if(httpResult.getCode() == HttpsURLConnection.HTTP_OK) {
                     JSONObject json = new JSONObject(httpResult.getResult());
+                    String createdAt = json.getString("created_at");
+                    int id = json.getInt("id");
+                    String name = json.getString("name");
+                    String phone = json.getString("phone");
+                    String updatedAt = json.getString("updated_at");
+                    String username = json.getString("username");
+
+                    UserInfo userInfo = new UserInfo(createdAt, id, name, phone, updatedAt, username);
+                    Global.setUserInfo(userInfo);
                     // TODO : 파싱된 json 데이터를 ToolBar Title에 세팅되도록 코드 작성 (Figma와 동일한 문구)
                 } else {
                     String msg = new JSONObject(httpResult.getResult()).getString("msg");
