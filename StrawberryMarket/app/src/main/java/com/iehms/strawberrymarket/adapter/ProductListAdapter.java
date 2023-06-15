@@ -33,7 +33,7 @@ public class ProductListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 0; //TODO : 알맞은 리턴값은?
+        return productList.size();
     }
 
     @Override
@@ -58,7 +58,11 @@ public class ProductListAdapter extends BaseAdapter {
         TextView tvName = itemView.findViewById(R.id.tv_name);
         TextView tvCreatedAt = itemView.findViewById(R.id.tv_created_at);
 
-        // TODO : product 데이터를 각각의 View에 세팅해주는 코드 작성
+        tvProductName.setText(product.getTitle());
+        tvPrice.setText(String.format("%,d", product.getPrice()));
+        tvName.setText(product.getUser());
+        tvCreatedAt.setText(product.getCreatedAt());
+        Glide.with(context).load(Constant.BASE_URL + product.getImageUrl()).into(productImage);
 
         return itemView;
     }
