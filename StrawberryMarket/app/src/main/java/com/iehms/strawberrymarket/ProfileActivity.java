@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.iehms.strawberrymarket.model.HttpResult;
@@ -26,12 +29,35 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    TextView tvUserName, tvUserId, tvPhone;
+    Button btnGoToMyProduct, btnSignOut;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        // TODO : 프로필 화면 작성 및 API 통신 및 click listener 추가
+        tvUserName = findViewById(R.id.tv_user_name);
+        tvUserId = findViewById(R.id.tv_user_id);
+        tvPhone = findViewById(R.id.tv_phone);
+        btnGoToMyProduct = findViewById(R.id.btn_my_products);
+        btnSignOut = findViewById(R.id.btn_sign_out);
+
+        btnGoToMyProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToMyProductList();
+            }
+        });
+
+        btnSignOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                logout();
+            }
+        });
+
+        new UserInfoApiTask().execute();
     }
 
     private void logout() {
@@ -117,7 +143,10 @@ public class ProfileActivity extends AppCompatActivity {
 
                     UserInfo userInfo = new UserInfo(createdAt, id, name, phone, updatedAt, username);
                     Global.setUserInfo(userInfo);
-                    // TODO : 파싱된 json 데이터를 각 뷰에 세팅하는 코드 작성 (Figma와 동일하게)
+
+                    tvUserName.setText(name);
+                    tvUserId.setText(username);
+                    tvPhone.setText(phone);
                 } else {
                     String msg = new JSONObject(httpResult.getResult()).getString("msg");
                     Toast.makeText(ProfileActivity.this, msg, Toast.LENGTH_LONG).show();

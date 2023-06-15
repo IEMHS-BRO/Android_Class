@@ -7,9 +7,12 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.bumptech.glide.Glide;
 import com.iehms.strawberrymarket.model.HttpResult;
 import com.iehms.strawberrymarket.util.AuthManager;
 
@@ -31,6 +34,8 @@ public class ProductDetailActivity extends AppCompatActivity {
     public static String KEY_PRODUCT_ID = "productId";
     private int productId;
     Toolbar toolbar;
+    TextView tvUserName, tvPhone, tvTitle, tvPrice, tvDesc;
+    ImageView ivProductImage;
 
 
     @Override
@@ -40,6 +45,13 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         productId = getIntent().getIntExtra(KEY_PRODUCT_ID, -1);
         toolbar = findViewById(R.id.tool_bar);
+
+        ivProductImage = findViewById(R.id.iv_product_image);
+        tvUserName = findViewById(R.id.tv_user_name);
+        tvPhone = findViewById(R.id.tv_phone);
+        tvTitle = findViewById(R.id.tv_title);
+        tvPrice = findViewById(R.id.tv_price);
+        tvDesc = findViewById(R.id.tv_desc);
 
         // 툴바 메뉴 클릭 리스너 추가
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -139,7 +151,23 @@ public class ProductDetailActivity extends AppCompatActivity {
                     if(userId == Global.getUserInfo().getId()) {                // 내 유저 id와 동일할 경우 (내 게시물일 경우)
                         toolbar.inflateMenu(R.menu.menu_product_detail);        // 메뉴 추가 (삭제 버튼)
                     }
-                    // TODO : httpResult.getResult()인 String을 JSON으로 파싱 후 화면에 보여주는 코드 작성
+
+                    String imageUrl = json.getString("image_url");
+                    int price = json.getInt("price");
+                    String createdAt = json.getString("created_at");
+                    String title = json.getString("title");
+                    String desc = json.getString("description");
+                    String userName = user.getString("name");
+                    String userPhone = user.getString("phone");
+
+                    Glide.with(ProductDetailActivity.this).load(Constant.BASE_URL + imageUrl).into(ivProductImage);
+                    tvUserName.setText(userName);
+                    tvPhone.setText(userPhone);
+
+                    tvTitle.setText(title);
+                    tvPrice.setText(String.format("%,d원", price));
+                    tvDesc.setText(desc);
+
                 } else {
                     String msg = new JSONObject(httpResult.getResult()).getString("msg");
                     Toast.makeText(ProductDetailActivity.this, msg, Toast.LENGTH_LONG).show();

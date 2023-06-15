@@ -82,9 +82,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        new ProductListApiTask().execute();
         new UserInfoApiTask().execute();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        new ProductListApiTask().execute();
     }
 
     private void goToPostProduct() {

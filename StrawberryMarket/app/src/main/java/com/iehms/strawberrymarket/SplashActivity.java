@@ -48,12 +48,14 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void goToMain() {
-        // TODO : MainActivity 화면으로 이동하는 코드 작성
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
         finish();
     }
 
     private void goToLogin() {
-        // TODO : LoginActivity 화면으로 이동하는 코드 작성
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
         finish();
     }
 

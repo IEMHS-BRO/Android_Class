@@ -27,14 +27,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <!-- TODO : 메인 > 플로팅 액션 버튼 디자인 완성 -->
-
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/btn_go_to_post_product"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="26dp"
         android:layout_marginEnd="16dp"
+        app:icon="@drawable/ic_edit"
+        app:iconTint="@color/white"
+        android:text="등록하기"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
