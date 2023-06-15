@@ -15,6 +15,7 @@ import com.iehms.strawberrymarket.model.HttpResult;
 import com.iehms.strawberrymarket.model.Product;
 import com.iehms.strawberrymarket.util.AuthManager;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,6 +26,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -113,7 +115,24 @@ public class MyProductListActivity extends AppCompatActivity {
             try {
                 if(httpResult.getCode() == HttpsURLConnection.HTTP_OK) {
                     // 통신에 성공했을 경우 (200)
-                    // TODO : httpResult.getResult()인 String을 JSON으로 파싱 후 ArrayList<Product>로 만들어 Adapter에 전달하는 코드 작성
+                    JSONObject json = new JSONObject(httpResult.getResult());
+                    JSONArray array = json.getJSONArray("products");
+                    ArrayList<Product> productList = new ArrayList<>();
+
+                    for(int i = 0; i < array.length(); i++) {
+                        JSONObject item = array.getJSONObject(i);
+                        String createdAt = item.getString("created_at");
+                        String title = item.getString("title");
+                        String userName = item.getJSONObject("user").getString("name");
+                        int price = item.getInt("price");
+                        String imageUrl = item.getString("image_url");
+                        int id = item.getInt("id");
+
+                        Product product = new Product(imageUrl, title, price, userName, createdAt, id);
+                        productList.add(product);
+                    }
+
+                    adapter.setItem(productList);
                 } else {
                     String msg = new JSONObject(httpResult.getResult()).getString("msg");
                     Toast.makeText(MyProductListActivity.this, msg, Toast.LENGTH_LONG).show();

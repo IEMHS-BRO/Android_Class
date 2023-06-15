@@ -238,6 +238,16 @@ public class MainActivity extends AppCompatActivity {
             try {
                 if(httpResult.getCode() == HttpsURLConnection.HTTP_OK) {
                     JSONObject json = new JSONObject(httpResult.getResult());
+                    String createdAt = json.getString("created_at");
+                    int id = json.getInt("id");
+                    String name = json.getString("name");
+                    String phone = json.getString("phone");
+                    String updatedAt = json.getString("updated_at");
+                    String username = json.getString("username");
+
+                    UserInfo userInfo = new UserInfo(createdAt, id, name, phone, updatedAt, username);
+                    Global.setUserInfo(userInfo);
+
                     toolbar.setTitle(String.format("Hello, %s!", json.getString("name")));
                 } else {
                     String msg = new JSONObject(httpResult.getResult()).getString("msg");
