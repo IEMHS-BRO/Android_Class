@@ -76,12 +76,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void goToMain() {
-        // TODO : MainActivity로 이동하는 코드 작성
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
         finish();
     }
 
     private void goToSignUp() {
-        // TODO : SignUpActivity로 이동하는 코드 작성
+        Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
     }
 
     // API 통신 (로그인 API 연동)
